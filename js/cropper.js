@@ -96,6 +96,14 @@ ctx.drawImage(
   canvas.width,
   canvas.height
 );
+      document.body.appendChild(canvas);
+canvas.style.position = "fixed";
+canvas.style.right = "20px";
+canvas.style.bottom = "20px";
+canvas.style.width = "200px";
+canvas.style.zIndex = "99999";
+canvas.style.border = "2px solid red";
+      
       canvas.toBlob((blob) => { backdrop.remove(); blob ? resolve(blob) : reject(new Error("blob")); }, "image/jpeg", 0.9);
     });
   });
