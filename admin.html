@@ -5,6 +5,7 @@
   <title>Admin | DESILEAKS</title>
   <link rel="icon" href="/assets/favicon.ico" />
   <link rel="stylesheet" href="/css/styles.css" />
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/cropperjs/1.6.2/cropper.min.css" />
   <style>
     .tab-btn { padding: .5rem 1rem; border-radius: .5rem; background: var(--secondary); cursor: pointer; border: 0; color: var(--foreground); }
     .tab-btn.active { background: var(--primary); }
@@ -86,6 +87,7 @@
       </form>
     </section>
   </main>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/cropperjs/1.6.2/cropper.min.js"></script>
   <script type="module">
     import { mountNavbar } from "/js/navbar.js";
     import { waitForAuth } from "/js/auth.js";
