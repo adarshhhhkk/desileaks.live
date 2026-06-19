@@ -1,0 +1,41 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" /><meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Search | DESILEAKS</title>
+  <link rel="icon" href="/assets/favicon.ico" />
+  <link rel="stylesheet" href="/css/styles.css" />
+</head>
+<body>
+  <main class="page min-h-screen px-4 sm:px-6 md:px-8 lg:px-12">
+    <div class="max-w-7xl mx-auto pt-4">
+      <h1 class="text-2xl md:text-3xl font-bold mb-2">Search Results</h1>
+      <p id="meta" style="color:var(--muted-foreground)"></p>
+      <div id="grid" class="mt-6"></div>
+    </div>
+  </main>
+  <script type="module">
+    import { mountNavbar } from "/js/navbar.js";
+    import { supabase, settle } from "/js/supabase-client.js";
+    import { gridHTML, skeletonGridHTML } from "/js/video-card.js";
+    import { applySEO } from "/js/seo.js";
+    mountNavbar();
+    const q = new URLSearchParams(location.search).get("q") || "";
+    applySEO({ title: q ? `Search: ${q}` : "Search", url: `/search.html?q=${encodeURIComponent(q)}` });
+    const grid = document.getElementById("grid");
+    document.getElementById("meta").textContent = q ? `Showing results for "${q}"` : "";
+    (async () => {
+      if (!q) { grid.innerHTML = ""; return; }
+      grid.innerHTML = skeletonGridHTML(8);
+      const data = await settle(supabase.from("videos").select("id,title,thumbnail_url,duration,views,slug").order("created_at", { ascending: false }).limit(20), []);
+      const words = q.toLowerCase().split(" ");
+      const filtered = (data || []).filter(v => {
+        const tw = v.title.toLowerCase().split(" ");
+        return words.some(w => tw.some(t => t.includes(w)));
+      });
+      document.getElementById("meta").textContent = `Showing results for "${q}" (${filtered.length} videos found)`;
+      grid.innerHTML = filtered.length ? gridHTML(filtered) : `<div class="empty-state"><p>No videos found</p></div>`;
+    })();
+  </script>
+</body>
+</html>

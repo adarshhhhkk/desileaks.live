@@ -1,0 +1,92 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" /><meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Watch | DESILEAKS</title>
+  <link rel="icon" href="/assets/favicon.ico" />
+  <link rel="stylesheet" href="/css/styles.css" />
+</head>
+<body>
+  <main class="page min-h-screen container mx-auto px-4 py-6">
+    <div id="content" style="margin-top:1rem"></div>
+  </main>
+  <script type="module">
+    import { mountNavbar } from "/js/navbar.js";
+    import { supabase, settle } from "/js/supabase-client.js";
+    import { videoPlayerHTML } from "/js/video-player.js";
+    import { videoCardHTML, escapeHtml } from "/js/video-card.js";
+    import { applySEO, injectVideoJsonLd } from "/js/seo.js";
+    mountNavbar();
+    const slug = new URLSearchParams(location.search).get("slug");
+
+console.log("URL:", location.href);
+console.log("SLUG:", slug);
+    const content = document.getElementById("content");
+    if (!slug) { content.innerHTML = `<div class="text-center py-20"><h1 class="text-2xl font-bold">Video not found</h1></div>`; }
+    else (async () => {
+      let video = await settle(
+  supabase
+    .from("videos")
+    .select("*")
+    .eq("slug", slug)
+    .maybeSingle(),
+  null
+);
+
+console.log("VIDEO FROM SLUG:", video);
+
+if (!video) {
+  console.log("Slug search failed, trying ID");
+
+  video = await settle(
+    supabase
+      .from("videos")
+      .select("*")
+      .eq("id", slug)
+      .maybeSingle(),
+    null
+  );
+
+  console.log("VIDEO FROM ID:", video);
+}
+      if (!video) { content.innerHTML = `<div class="text-center py-20"><h1 class="text-2xl font-bold">Video not found</h1></div>`; return; }
+      applySEO({ title: video.title, description: video.description || `Watch ${video.title}`, image: video.thumbnail_url, url: `/watch?slug=${encodeURIComponent(video.slug || video.id)}`, type: "video.other", videoUrl: video.video_url });
+      injectVideoJsonLd(video);
+      supabase.rpc("increment_video_views", { _video_id: video.id });
+      const [sidebar, more] = await Promise.all([
+        settle(supabase.from("videos").select("id,title,thumbnail_url,duration,slug,created_at").neq("slug", slug).order("created_at", { ascending: false }).limit(10), []),
+        settle(supabase.from("videos").select("id,title,thumbnail_url,duration,slug,created_at").neq("slug", slug).limit(20), []),
+      ]);
+      const shuffled = [...(more || [])].sort(() => Math.random() - 0.5).slice(0, 12);
+      const cat = escapeHtml(video.category || "");
+      content.innerHTML = `
+        <div class="grid gap-6 lg:grid-cols-3">
+          <div class="lg:col-span-2">
+            ${videoPlayerHTML(video.video_url, video.thumbnail_url)}
+            <header class="watch-header">
+              <h1 class="watch-title">${escapeHtml(video.title)}</h1>
+              <div class="watch-meta">
+  <span>👁 ${(video.views || 0).toLocaleString()} views</span>
+  ${cat ? `
+    <span class="watch-dot">•</span>
+    <a href="/category?name=${encodeURIComponent(video.category)}" class="watch-cat-inline">${cat}</a>
+  ` : ""}
+</div>
+              ${video.description ? `<p class="watch-desc">${escapeHtml(video.description)}</p>` : ""}
+            </header>
+          </div>
+          <aside class="hidden lg:block">
+            <h2 class="mb-3 text-xl font-bold">Suggested Videos</h2>
+            <div class="space-y-4">${(sidebar || []).map(videoCardHTML).join("")}</div>
+          </aside>
+        </div>
+        <section class="mt-10">
+          <h2 class="mb-4 text-xl font-bold sm:text-2xl">More Videos</h2>
+          <div class="grid grid-cols-2 gap-2 sm:gap-3 md:grid-cols-3 md:gap-4 lg:grid-cols-4">${shuffled.map(videoCardHTML).join("")}</div>
+        </section>`;
+    })();
+
+
+  </script>
+</body>
+</html>
