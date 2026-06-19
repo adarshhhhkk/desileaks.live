@@ -1,124 +1,129 @@
-// Simple aspect-locked image cropper using a canvas. Returns Blob.
 export function openCropper(imageSrc, aspectRatio) {
   return new Promise((resolve, reject) => {
+
     const backdrop = document.createElement("div");
+
     backdrop.className = "modal-backdrop";
+
     backdrop.innerHTML = `
-      <div class="modal" style="max-width:720px">
+      <div class="modal" style="max-width:900px">
         <h3 class="text-lg font-bold mb-3">Crop image</h3>
-        <div id="crop-stage" style="position:relative; width:100%; height:60vh; max-height:480px; overflow:hidden; background:#111; border-radius:.5rem">
-          <img id="crop-img" src="${imageSrc}" alt="" style="position:absolute; left:0; top:0; user-select:none; -webkit-user-drag:none; transform-origin: top left;" />
-          <div id="crop-frame" style="position:absolute; border:2px solid #fff; box-shadow:0 0 0 9999px rgba(0,0,0,.55); pointer-events:none;"></div>
+
+        <div style="max-height:70vh;overflow:hidden">
+          <img
+            id="crop-image"
+            src="${imageSrc}"
+            style="display:block;max-width:100%;width:100%;"
+          />
         </div>
-        <div class="mt-2 flex items-center gap-3"><label class="text-sm">Zoom</label>
-          <input id="crop-zoom" type="range" min="1" max="1" step="1" value="1" />
+
         <div class="mt-3 flex justify-end gap-2">
-          <button class="btn-outline" id="crop-cancel">Cancel</button>
-          <button class="btn-primary" id="crop-ok">Crop & save</button>
+          <button class="btn-outline" id="crop-cancel">
+            Cancel
+          </button>
+
+          <button class="btn-primary" id="crop-save">
+            Crop & Save
+          </button>
         </div>
-      </div>`;
+      </div>
+    `;
+
     document.body.appendChild(backdrop);
-    const stage = backdrop.querySelector("#crop-stage");
-    const img = backdrop.querySelector("#crop-img");
-    const frame = backdrop.querySelector("#crop-frame");
-    const zoomInput = backdrop.querySelector("#crop-zoom");
-    let baseScale = 1, zoom = 1, offsetX = 0, offsetY = 0;
-    let frameW = 0, frameH = 0, frameX = 0, frameY = 0;
-    img.onload = () => {
-      const sw = stage.clientWidth, sh = stage.clientHeight;
-      if (sw / sh > aspectRatio) { frameH = sh * 0.9; frameW = frameH * aspectRatio; }
-      else { frameW = sw * 0.9; frameH = frameW / aspectRatio; }
-      frameX = (sw - frameW) / 2; frameY = (sh - frameH) / 2;
-      Object.assign(frame.style, { left: frameX+"px", top: frameY+"px", width: frameW+"px", height: frameH+"px" });
-      baseScale = Math.max(frameW / img.naturalWidth, frameH / img.naturalHeight);
-      const dispW = img.naturalWidth * baseScale, dispH = img.naturalHeight * baseScale;
-      offsetX = (sw - dispW) / 2; offsetY = (sh - dispH) / 2;
-      applyTransform();
-    };
-    function applyTransform() {
-  img.style.left = offsetX + "px";
-  img.style.top = offsetY + "px";
-  img.style.transform = `scale(${baseScale * zoom})`;
-}
-    function clampOffsets() {
-      const dispW = img.naturalWidth * baseScale * zoom, dispH = img.naturalHeight * baseScale * zoom;
-      const minX = frameX + frameW - dispW, minY = frameY + frameH - dispH;
-      offsetX = Math.min(frameX, Math.max(minX, offsetX));
-      offsetY = Math.min(frameY, Math.max(minY, offsetY));
-    }
-    zoomInput.addEventListener("input", () => {
-  zoom = parseFloat(zoomInput.value);
-  clampOffsets();
-  applyTransform();
-});
-    let dragging = false, sx = 0, sy = 0;
-    stage.addEventListener("mousedown", (e) => { dragging = true; sx = e.clientX - offsetX; sy = e.clientY - offsetY; });
-    window.addEventListener("mousemove", (e) => { if (!dragging) return; offsetX = e.clientX - sx; offsetY = e.clientY - sy; clampOffsets(); applyTransform(); });
-    window.addEventListener("mouseup", () => dragging = false);
-    stage.addEventListener("touchstart", (e) => { const t = e.touches[0]; dragging = true; sx = t.clientX - offsetX; sy = t.clientY - offsetY; }, { passive: true });
-    stage.addEventListener("touchmove", (e) => { if (!dragging) return; const t = e.touches[0]; offsetX = t.clientX - sx; offsetY = t.clientY - sy; clampOffsets(); applyTransform(); }, { passive: true });
-    stage.addEventListener("touchend", () => dragging = false);
-    backdrop.querySelector("#crop-cancel").addEventListener("click", () => { backdrop.remove(); reject(new Error("cancelled")); });
-    backdrop.querySelector("#crop-ok").addEventListener("click", () => {
-      const scale = baseScale * zoom;
 
-const cropX = Math.max(0, (frameX - offsetX) / scale);
-const cropY = Math.max(0, (frameY - offsetY) / scale);
+    const image = backdrop.querySelector("#crop-image");
 
-const cropW = Math.min(
-  img.naturalWidth - cropX,
-  frameW / scale
-);
-
-const cropH = Math.min(
-  img.naturalHeight - cropY,
-  frameH / scale
-);
-
-const canvas = document.createElement("canvas");
-
-canvas.width = Math.round(cropW);
-canvas.height = Math.round(cropH);
-
-const ctx = canvas.getContext("2d");
-
-ctx.drawImage(
-  img,
-  cropX,
-  cropY,
-  cropW,
-  cropH,
-  0,
-  0,
-  canvas.width,
-  canvas.height
-);
-      document.body.appendChild(canvas);
-canvas.style.position = "fixed";
-canvas.style.right = "20px";
-canvas.style.bottom = "20px";
-canvas.style.width = "200px";
-canvas.style.zIndex = "99999";
-canvas.style.border = "2px solid red";
-      
-      canvas.toBlob((blob) => { backdrop.remove(); blob ? resolve(blob) : reject(new Error("blob")); }, "image/jpeg", 0.9);
+    const cropper = new Cropper(image, {
+      aspectRatio: aspectRatio,
+      viewMode: 1,
+      dragMode: "move",
+      autoCropArea: 1,
+      responsive: true,
+      zoomable: true,
+      movable: true,
+      scalable: true,
+      cropBoxMovable: true,
+      cropBoxResizable: true,
+      background: false
     });
+
+    backdrop.querySelector("#crop-cancel")
+      .addEventListener("click", () => {
+        cropper.destroy();
+        backdrop.remove();
+        reject(new Error("cancelled"));
+      });
+
+    backdrop.querySelector("#crop-save")
+      .addEventListener("click", () => {
+
+        const canvas = cropper.getCroppedCanvas({
+          imageSmoothingEnabled: true,
+          imageSmoothingQuality: "high"
+        });
+
+        canvas.toBlob(
+          (blob) => {
+
+            cropper.destroy();
+            backdrop.remove();
+
+            if (blob) {
+              resolve(blob);
+            } else {
+              reject(new Error("blob"));
+            }
+
+          },
+          "image/jpeg",
+          0.92
+        );
+
+      });
+
   });
 }
-export function fileToDataURL(file) { return new Promise((res, rej) => { const r = new FileReader(); r.onloadend = () => res(r.result); r.onerror = rej; r.readAsDataURL(file); }); }
+
+export function fileToDataURL(file) {
+  return new Promise((res, rej) => {
+    const r = new FileReader();
+    r.onloadend = () => res(r.result);
+    r.onerror = rej;
+    r.readAsDataURL(file);
+  });
+}
+
 export async function extractVideoFrame(file, atTime = 1) {
   return new Promise((resolve, reject) => {
     const video = document.createElement("video");
-    video.preload = "metadata"; video.muted = true; video.playsInline = true;
-    video.addEventListener("loadedmetadata", () => { video.currentTime = atTime; });
+
+    video.preload = "metadata";
+    video.muted = true;
+    video.playsInline = true;
+
+    video.addEventListener("loadedmetadata", () => {
+      video.currentTime = atTime;
+    });
+
     video.addEventListener("seeked", () => {
       const canvas = document.createElement("canvas");
-      canvas.width = video.videoWidth; canvas.height = video.videoHeight;
+
+      canvas.width = video.videoWidth;
+      canvas.height = video.videoHeight;
+
       canvas.getContext("2d").drawImage(video, 0, 0);
+
       const url = canvas.toDataURL("image/jpeg", 0.9);
-      URL.revokeObjectURL(video.src); resolve(url);
+
+      URL.revokeObjectURL(video.src);
+
+      resolve(url);
     });
-    video.addEventListener("error", () => reject(new Error("video load")));
+
+    video.addEventListener("error", () =>
+      reject(new Error("video load"))
+    );
+
     video.src = URL.createObjectURL(file);
   });
 }
