@@ -58,6 +58,13 @@ export function openCropper(imageSrc, aspectRatio) {
       .addEventListener("click", () => {
 
         const canvas = cropper.getCroppedCanvas({
+          document.body.appendChild(canvas);
+canvas.style.position = "fixed";
+canvas.style.right = "20px";
+canvas.style.bottom = "20px";
+canvas.style.width = "200px";
+canvas.style.zIndex = "999999";
+canvas.style.border = "3px solid red";
           imageSmoothingEnabled: true,
           imageSmoothingQuality: "high"
         });
