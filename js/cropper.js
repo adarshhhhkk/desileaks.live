@@ -7,7 +7,9 @@ export function openCropper(imageSrc, aspectRatio) {
 
     backdrop.innerHTML = `
       <div class="modal" style="max-width:900px">
-        <h3 class="text-lg font-bold mb-3">Crop image</h3>
+        <h3 class="text-lg font-bold mb-3">
+          Crop Image
+        </h3>
 
         <div style="max-height:70vh;overflow:hidden">
           <img
@@ -18,11 +20,17 @@ export function openCropper(imageSrc, aspectRatio) {
         </div>
 
         <div class="mt-3 flex justify-end gap-2">
-          <button class="btn-outline" id="crop-cancel">
+          <button
+            class="btn-outline"
+            id="crop-cancel"
+          >
             Cancel
           </button>
 
-          <button class="btn-primary" id="crop-save">
+          <button
+            class="btn-primary"
+            id="crop-save"
+          >
             Crop & Save
           </button>
         </div>
@@ -47,27 +55,34 @@ export function openCropper(imageSrc, aspectRatio) {
       background: false
     });
 
-    backdrop.querySelector("#crop-cancel")
+    backdrop
+      .querySelector("#crop-cancel")
       .addEventListener("click", () => {
         cropper.destroy();
         backdrop.remove();
         reject(new Error("cancelled"));
       });
 
-    backdrop.querySelector("#crop-save")
+    backdrop
+      .querySelector("#crop-save")
       .addEventListener("click", () => {
 
         const canvas = cropper.getCroppedCanvas({
-          document.body.appendChild(canvas);
-canvas.style.position = "fixed";
-canvas.style.right = "20px";
-canvas.style.bottom = "20px";
-canvas.style.width = "200px";
-canvas.style.zIndex = "999999";
-canvas.style.border = "3px solid red";
+          width: aspectRatio < 1 ? 900 : 1280,
+          height: aspectRatio < 1 ? 1200 : 720,
           imageSmoothingEnabled: true,
           imageSmoothingQuality: "high"
         });
+
+        // DEBUG PREVIEW
+        document.body.appendChild(canvas);
+
+        canvas.style.position = "fixed";
+        canvas.style.right = "20px";
+        canvas.style.bottom = "20px";
+        canvas.style.width = "200px";
+        canvas.style.zIndex = "999999";
+        canvas.style.border = "3px solid red";
 
         canvas.toBlob(
           (blob) => {
@@ -94,14 +109,18 @@ canvas.style.border = "3px solid red";
 export function fileToDataURL(file) {
   return new Promise((res, rej) => {
     const r = new FileReader();
+
     r.onloadend = () => res(r.result);
+
     r.onerror = rej;
+
     r.readAsDataURL(file);
   });
 }
 
 export async function extractVideoFrame(file, atTime = 1) {
   return new Promise((resolve, reject) => {
+
     const video = document.createElement("video");
 
     video.preload = "metadata";
@@ -113,24 +132,33 @@ export async function extractVideoFrame(file, atTime = 1) {
     });
 
     video.addEventListener("seeked", () => {
+
       const canvas = document.createElement("canvas");
 
       canvas.width = video.videoWidth;
       canvas.height = video.videoHeight;
 
-      canvas.getContext("2d").drawImage(video, 0, 0);
+      canvas
+        .getContext("2d")
+        .drawImage(video, 0, 0);
 
-      const url = canvas.toDataURL("image/jpeg", 0.9);
+      const url = canvas.toDataURL(
+        "image/jpeg",
+        0.9
+      );
 
       URL.revokeObjectURL(video.src);
 
       resolve(url);
+
     });
 
-    video.addEventListener("error", () =>
-      reject(new Error("video load"))
+    video.addEventListener(
+      "error",
+      () => reject(new Error("video load"))
     );
 
     video.src = URL.createObjectURL(file);
+
   });
 }
