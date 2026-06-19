@@ -11,7 +11,7 @@ export function openCropper(imageSrc, aspectRatio) {
           <div id="crop-frame" style="position:absolute; border:2px solid #fff; box-shadow:0 0 0 9999px rgba(0,0,0,.55); pointer-events:none;"></div>
         </div>
         <div class="mt-2 flex items-center gap-3"><label class="text-sm">Zoom</label>
-          <input id="crop-zoom" type="range" min="1" max="4" step="0.01" value="1" style="flex:1" /></div>
+          <input id="crop-zoom" type="range" min="1" max="1" step="1" value="1" />
         <div class="mt-3 flex justify-end gap-2">
           <button class="btn-outline" id="crop-cancel">Cancel</button>
           <button class="btn-primary" id="crop-ok">Crop & save</button>
