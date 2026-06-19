@@ -35,7 +35,11 @@ export function openCropper(imageSrc, aspectRatio) {
       offsetX = (sw - dispW) / 2; offsetY = (sh - dispH) / 2;
       applyTransform();
     };
-    function applyTransform() { img.style.transform = `translate(${offsetX}px, ${offsetY}px) scale(${baseScale * zoom})`; }
+    function applyTransform() {
+  img.style.left = offsetX + "px";
+  img.style.top = offsetY + "px";
+  img.style.transform = `scale(${baseScale * zoom})`;
+}
     function clampOffsets() {
       const dispW = img.naturalWidth * baseScale * zoom, dispH = img.naturalHeight * baseScale * zoom;
       const minX = frameX + frameW - dispW, minY = frameY + frameH - dispH;
