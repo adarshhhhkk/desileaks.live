@@ -1,0 +1,88 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>DESILEAKS - VIRAL BHABHI MMS | Indian Viral MMS & Desi Leaks</title>
+  <meta name="description" content="DESILEAKS - Watch the latest viral bhabhi MMS, Indian viral videos, trending desi leaks and hot desi content. Updated daily." />
+  <meta name="keywords" content="desileaks, desi leaks, viral mms, bhabhi mms, indian mms, viral videos, desi videos, trending mms, hot videos, indian viral, leaked mms, bhabhi videos" />
+  <meta name="author" content="DESILEAKS" />
+  <meta name="robots" content="index, follow, max-image-preview:large, max-snippet:-1, max-video-preview:-1" />
+  <meta name="googlebot" content="index, follow" />
+  <meta name="bingbot" content="index, follow" />
+  <meta name="theme-color" content="#000000" />
+  <meta name="rating" content="adult" />
+  <meta name="referrer" content="no-referrer-when-downgrade" />
+  <link rel="canonical" href="https://desileaks.live/" />
+  <link rel="icon" href="/assets/favicon.ico" />
+  <link rel="apple-touch-icon" href="/assets/logo.png" />
+  <link rel="stylesheet" href="/css/styles.css" />
+  <link rel="preconnect" href="https://snuwaxtrhogfrhselwow.supabase.co" crossorigin />
+  <link rel="dns-prefetch" href="https://snuwaxtrhogfrhselwow.supabase.co" />
+  <link rel="preconnect" href="https://esm.sh" crossorigin />
+  <meta property="og:type" content="website" />
+  <meta property="og:site_name" content="DESILEAKS" />
+  <meta property="og:url" content="https://desileaks.live/" />
+  <meta property="og:title" content="DESILEAKS - VIRAL BHABHI MMS | Indian Viral MMS & Desi Leaks" />
+  <meta property="og:description" content="Watch the latest viral bhabhi MMS, Indian viral videos and trending desi leaks. Updated daily." />
+  <meta property="og:image" content="https://i.ibb.co/VWSBrzZb/Untitled-design.png" />
+  <meta property="og:image:width" content="1200" />
+  <meta property="og:image:height" content="630" />
+  <meta property="og:locale" content="en_US" />
+  <meta name="twitter:card" content="summary_large_image" />
+  <meta name="twitter:site" content="@desileaks" />
+  <meta name="twitter:title" content="DESILEAKS - VIRAL BHABHI MMS" />
+  <meta name="twitter:description" content="Watch the latest viral bhabhi MMS, Indian viral videos and trending desi leaks." />
+  <meta name="twitter:image" content="https://i.ibb.co/VWSBrzZb/Untitled-design.png" />
+  <script type="application/ld+json">
+  {"@context":"https://schema.org","@graph":[
+    {"@type":"WebSite","@id":"https://desileaks.live/#website","url":"https://desileaks.live/","name":"DESILEAKS","description":"Viral bhabhi MMS, Indian viral videos and trending desi leaks.","potentialAction":{"@type":"SearchAction","target":"https://desileaks.live/search?q={search_term_string}","query-input":"required name=search_term_string"}},
+    {"@type":"Organization","@id":"https://desileaks.live/#org","name":"DESILEAKS","url":"https://desileaks.live/","logo":"https://desileaks.live/assets/logo.png"}
+  ]}
+  </script>
+</head>
+<body>
+  <main class="page min-h-screen">
+    <div id="hero"></div>
+    <div id="categories"></div>
+    <section class="px-3 py-6 sm:px-4 sm:py-8 md:px-6 md:py-10 lg:container lg:mx-auto">
+      <div class="flex items-center justify-between mb-4">
+        <div class="flex items-center section-tabs">
+          <span class="text-lg font-bold sm:text-xl md:text-2xl px-3 py-1 rounded" style="background:#fff;color:#000">Trending Now</span>
+          <a href="/all-videos.html" class="text-lg font-bold sm:text-xl md:text-2xl" style="color:var(--muted-foreground)">All Videos</a>
+        </div>
+        <select id="sort" class="input home-sort" style="width:auto">
+          <option value="latest">Latest</option>
+          <option value="oldest">Oldest</option>
+          <option value="most_viewed">Most Viewed</option>
+        </select>
+      </div>
+      <div id="grid"></div>
+    </section>
+  </main>
+  <script type="module">
+    import { mountNavbar } from "/js/navbar.js";
+    import { mountHero } from "/js/hero.js";
+    import { mountCategorySlider } from "/js/category-slider.js";
+    import { gridHTML, skeletonGridHTML } from "/js/video-card.js";
+    import { applySEO } from "/js/seo.js";
+    import { getLatestVideos } from "/js/data.js";
+    applySEO({});
+    mountNavbar();
+    const latestVideos = getLatestVideos(20);
+    mountHero(document.getElementById("hero"), latestVideos);
+    mountCategorySlider(document.getElementById("categories"));
+    const grid = document.getElementById("grid");
+    const sort = document.getElementById("sort");
+    async function load() {
+      grid.innerHTML = skeletonGridHTML(8);
+      let data = [...await latestVideos];
+      const v = sort.value;
+      if (v === "oldest") data.reverse();
+      else if (v === "most_viewed") data.sort((a, b) => (b.views || 0) - (a.views || 0));
+      grid.innerHTML = data.length ? gridHTML(data) : `<div class="empty-state"><p>No videos yet</p></div>`;
+    }
+    sort.addEventListener("change", load); load();
+  </script>
+</body>
+</html>

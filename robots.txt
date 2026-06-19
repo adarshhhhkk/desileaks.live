@@ -1,0 +1,16 @@
+User-agent: *
+Allow: /
+Disallow: /admin.html
+Disallow: /auth.html
+
+User-agent: Googlebot
+Allow: /
+Disallow: /admin.html
+Disallow: /auth.html
+
+User-agent: Bingbot
+Allow: /
+Disallow: /admin.html
+Disallow: /auth.html
+
+Sitemap: https://desileaks.live/sitemap.xml

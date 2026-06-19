@@ -1,0 +1,44 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" /><meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Category | DESILEAKS</title>
+  <link rel="icon" href="/assets/favicon.ico" />
+  <link rel="stylesheet" href="/css/styles.css" />
+</head>
+<body>
+  <main class="page min-h-screen container mx-auto px-4 py-8">
+    <h1 id="title" class="text-3xl font-bold mb-4"></h1>
+    <div id="chips" class="overflow-x-auto pb-2"></div>
+    <div id="grid" class="mt-6"></div>
+  </main>
+  <script type="module">
+    import { mountNavbar } from "/js/navbar.js";
+    import { supabase, settle } from "/js/supabase-client.js";
+    import { gridHTML, skeletonGridHTML, escapeHtml } from "/js/video-card.js";
+    import { applySEO } from "/js/seo.js";
+    mountNavbar();
+    const params = new URLSearchParams(location.search);
+    const name = params.get("name") || "All";
+    document.getElementById("title").textContent = name === "All" ? "All Categories" : name;
+    applySEO({ title: name === "All" ? "All Categories" : `${name} Videos`, url: `/category?name=${encodeURIComponent(name)}`, keywords: `${name}, ${name} videos` });
+    (async () => {
+      const vs = await settle(supabase.from("videos").select("category").limit(20), []);
+      const cats = ["All", ...Array.from(new Set((vs || []).map(v => v.category)))];
+      document.getElementById("chips").innerHTML = `<div class="flex gap-2 min-w-max">${cats.map(c =>
+        `<a href="/category?name=${encodeURIComponent(c)}" class="px-4 py-2 rounded-full text-sm font-medium whitespace-nowrap" style="${c===name?'background:var(--primary);color:#fff':'background:var(--secondary);color:var(--foreground)'}">${escapeHtml(c)}</a>`
+      ).join("")}</div>`;
+    })();
+    (async () => {
+      const grid = document.getElementById("grid");
+      grid.innerHTML = skeletonGridHTML(8);
+      let q = supabase.from("videos").select("id,title,thumbnail_url,duration,views,category,slug").order("created_at", { ascending: false });
+      if (name !== "All") {
+  q = q.ilike("category", name);
+}
+      const data = await settle(q.limit(20), []);
+      grid.innerHTML = data.length ? gridHTML(data) : `<div class="empty-state"><p>No videos in this category</p></div>`;
+    })();
+  </script>
+</body>
+</html>
