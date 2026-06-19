@@ -181,9 +181,13 @@ function openCropModal(img, aspect, resolve, reject) {
   let lastX = 0;
   let lastY = 0;
 
-  const rectScale = () =>
-    outW /
-    box.getBoundingClientRect().width;
+  function getScaleX() {
+  return outW / box.getBoundingClientRect().width;
+}
+
+function getScaleY() {
+  return outH / box.getBoundingClientRect().height;
+}
 
   function start(e) {
 
@@ -205,13 +209,13 @@ function openCropModal(img, aspect, resolve, reject) {
     const p =
       e.touches?.[0] || e;
 
-    tx +=
-      (p.clientX - lastX) *
-      rectScale();
+tx +=
+  (p.clientX - lastX) *
+  getScaleX();
 
-    ty +=
-      (p.clientY - lastY) *
-      rectScale();
+ty +=
+  (p.clientY - lastY) *
+  getScaleY();
 
     lastX = p.clientX;
     lastY = p.clientY;
