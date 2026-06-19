@@ -47,13 +47,10 @@ export function openCropper(imageSrc, aspectRatio) {
       offsetY = Math.min(frameY, Math.max(minY, offsetY));
     }
     zoomInput.addEventListener("input", () => {
-      const oldScale = baseScale * zoom; zoom = parseFloat(zoomInput.value);
-      const newScale = baseScale * zoom;
-      const cx = frameX + frameW / 2, cy = frameY + frameH / 2;
-      offsetX = cx - (cx - offsetX) * (newScale / oldScale);
-      offsetY = cy - (cy - offsetY) * (newScale / oldScale);
-      clampOffsets(); applyTransform();
-    });
+  zoom = parseFloat(zoomInput.value);
+  clampOffsets();
+  applyTransform();
+});
     let dragging = false, sx = 0, sy = 0;
     stage.addEventListener("mousedown", (e) => { dragging = true; sx = e.clientX - offsetX; sy = e.clientY - offsetY; });
     window.addEventListener("mousemove", (e) => { if (!dragging) return; offsetX = e.clientX - sx; offsetY = e.clientY - sy; clampOffsets(); applyTransform(); });
