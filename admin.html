@@ -276,7 +276,6 @@
     });
     async function uploadThumb(blob, suffix) {
       if (!blob) return null;
-      const { upscaleBlob } = await import("/js/upscaler.js");
       const upscaled = blob;
       const name = `${Date.now()}-${suffix}.jpg`;
       const { error } = await supabase.storage.from("thumbnails").upload(name, upscaled, {
