@@ -11,7 +11,13 @@ export function openCropper(imageSrc, aspectRatio) {
           Crop Image
         </h3>
 
-        <div style="max-height:70vh;overflow:hidden">
+        <div
+  style="
+    max-height:70vh;
+    overflow:hidden;
+    touch-action:none;
+  "
+>
           <img
             id="crop-image"
             src="${imageSrc}"
@@ -42,18 +48,25 @@ export function openCropper(imageSrc, aspectRatio) {
     const image = backdrop.querySelector("#crop-image");
 
     const cropper = new Cropper(image, {
-      aspectRatio: aspectRatio,
-      viewMode: 1,
-      dragMode: "move",
-      autoCropArea: 1,
-      responsive: true,
-      zoomable: true,
-      movable: true,
-      scalable: true,
-      cropBoxMovable: true,
-      cropBoxResizable: true,
-      background: false
-    });
+  aspectRatio: aspectRatio,
+  viewMode: 1,
+  dragMode: "move",
+  autoCropArea: 1,
+  responsive: true,
+
+  zoomable: true,
+  movable: true,
+  scalable: true,
+
+  cropBoxMovable: true,
+  cropBoxResizable: true,
+
+  touchDragZoom: true,
+  restore: false,
+  guides: true,
+  center: true,
+  background: false
+});
 
     backdrop
       .querySelector("#crop-cancel")
