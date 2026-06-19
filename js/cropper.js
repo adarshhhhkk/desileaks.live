@@ -7,7 +7,7 @@ export function openCropper(imageSrc, aspectRatio) {
       <div class="modal" style="max-width:720px">
         <h3 class="text-lg font-bold mb-3">Crop image</h3>
         <div id="crop-stage" style="position:relative; width:100%; height:60vh; max-height:480px; overflow:hidden; background:#111; border-radius:.5rem">
-          <img id="crop-img" src="${imageSrc}" alt="" style="position:absolute; user-select:none; -webkit-user-drag:none; transform-origin: top left;" />
+          <img id="crop-img" src="${imageSrc}" alt="" style="position:absolute; left:0; top:0; user-select:none; -webkit-user-drag:none; transform-origin: top left;" />
           <div id="crop-frame" style="position:absolute; border:2px solid #fff; box-shadow:0 0 0 9999px rgba(0,0,0,.55); pointer-events:none;"></div>
         </div>
         <div class="mt-2 flex items-center gap-3"><label class="text-sm">Zoom</label>
@@ -64,11 +64,38 @@ export function openCropper(imageSrc, aspectRatio) {
     backdrop.querySelector("#crop-cancel").addEventListener("click", () => { backdrop.remove(); reject(new Error("cancelled")); });
     backdrop.querySelector("#crop-ok").addEventListener("click", () => {
       const scale = baseScale * zoom;
-      const sxImg = (frameX - offsetX) / scale, syImg = (frameY - offsetY) / scale;
-      const swImg = frameW / scale, shImg = frameH / scale;
-      const canvas = document.createElement("canvas");
-      canvas.width = Math.round(swImg); canvas.height = Math.round(shImg);
-      canvas.getContext("2d").drawImage(img, sxImg, syImg, swImg, shImg, 0, 0, canvas.width, canvas.height);
+
+const cropX = Math.max(0, (frameX - offsetX) / scale);
+const cropY = Math.max(0, (frameY - offsetY) / scale);
+
+const cropW = Math.min(
+  img.naturalWidth - cropX,
+  frameW / scale
+);
+
+const cropH = Math.min(
+  img.naturalHeight - cropY,
+  frameH / scale
+);
+
+const canvas = document.createElement("canvas");
+
+canvas.width = Math.round(cropW);
+canvas.height = Math.round(cropH);
+
+const ctx = canvas.getContext("2d");
+
+ctx.drawImage(
+  img,
+  cropX,
+  cropY,
+  cropW,
+  cropH,
+  0,
+  0,
+  canvas.width,
+  canvas.height
+);
       canvas.toBlob((blob) => { backdrop.remove(); blob ? resolve(blob) : reject(new Error("blob")); }, "image/jpeg", 0.9);
     });
   });
