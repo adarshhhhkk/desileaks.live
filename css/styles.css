@@ -431,3 +431,17 @@ img, video, iframe { max-width: 100%; display: block; }
   }
 }
 
+.desktop-top-ad{
+  display:none;
+}
+
+@media (min-width:1024px){
+
+  .desktop-top-ad{
+    display:flex;
+    justify-content:center;
+    margin-bottom:20px;
+  }
+
+}
+
