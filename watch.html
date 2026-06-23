@@ -88,9 +88,9 @@ ${
     ? `
       <div class="mobile-download-wrap">
 
-        <button id="downloadToggle" class="download-toggle">
-          ⬇ Download
-        </button>
+        <button id="downloadToggle" class="mobile-download-btn">
+  DOWNLOAD
+</button>
 
         <div id="downloadLinks" class="download-links hidden">
 
@@ -116,19 +116,21 @@ ${
   ${
     downloadLinks.length
       ? `
-      <div class="download-panel">
-        <h2 class="mb-3 text-xl font-bold">Download</h2>
+      <div class="desktop-download-panel">
+  <div class="desktop-download-title">
+    DOWNLOAD
+  </div>
 
-        ${downloadLinks.map((link,i)=>`
-          <a
-            href="${link}"
-            target="_blank"
-            class="download-box"
-          >
-            Download Source ${i+1}
-          </a>
-        `).join("")}
-      </div>
+  ${downloadLinks.map((link,i)=>`
+    <a
+      href="${link}"
+      target="_blank"
+      class="desktop-download-box"
+    >
+      Download ${i+1}
+    </a>
+  `).join("")}
+</div>
       `
       : ""
   }
