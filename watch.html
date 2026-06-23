@@ -83,40 +83,12 @@ if (!video) {
               ${video.description ? `<p class="watch-desc">${escapeHtml(video.description)}</p>` : ""}
             </header>
 
-${
-  downloadLinks.length
-    ? `
-      <div class="mobile-download-wrap">
-
-        <button id="downloadToggle" class="mobile-download-btn">
-  DOWNLOAD
-</button>
-
-        <div id="downloadLinks" class="download-links hidden">
-
-          ${downloadLinks.map((link,i)=>`
-            <a
-              href="${link}"
-              target="_blank"
-              class="download-box"
-            >
-              Download Source ${i+1}
-            </a>
-          `).join("")}
-
-        </div>
-
-      </div>
-    `
-    : ""
-}
           </div>
-          <aside class="hidden lg:block">
+<aside class="hidden lg:block">
 
-  ${
-    downloadLinks.length
-      ? `
-      <div class="desktop-download-panel">
+${downloadLinks.length ? `
+<div class="desktop-download-panel">
+
   <div class="desktop-download-title">
     DOWNLOAD
   </div>
@@ -130,21 +102,43 @@ ${
       Download ${i+1}
     </a>
   `).join("")}
+
 </div>
-      `
-      : ""
-  }
+` : ""}
 
-  <h2 class="mb-3 text-xl font-bold" style="margin-top:20px">
-    Suggested Videos
-  </h2>
+<h2 class="mb-3 text-xl font-bold" style="margin-top:20px">
+Suggested Videos
+</h2>
 
-  <div class="space-y-4">
-    ${(sidebar || []).map(videoCardHTML).join("")}
-  </div>
+<div class="space-y-4">
+  ${(sidebar || []).map(videoCardHTML).join("")}
+</div>
 
 </aside>
         </div>
+        ${downloadLinks.length ? `
+<div class="mobile-download-wrap">
+
+  <button id="downloadToggle" class="mobile-download-btn">
+    DOWNLOAD
+  </button>
+
+  <div id="downloadLinks" class="download-links hidden">
+
+    ${downloadLinks.map((link,i)=>`
+      <a
+        href="${link}"
+        target="_blank"
+        class="download-box"
+      >
+        Download ${i+1}
+      </a>
+    `).join("")}
+
+  </div>
+
+</div>
+` : ""}
         <section class="mt-10">
           <h2 class="mb-4 text-xl font-bold sm:text-2xl">More Videos</h2>
           <div class="grid grid-cols-2 gap-2 sm:gap-3 md:grid-cols-3 md:gap-4 lg:grid-cols-4">${shuffled.map(videoCardHTML).join("")}</div>
