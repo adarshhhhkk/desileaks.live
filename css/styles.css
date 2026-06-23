@@ -275,48 +275,116 @@ img, video, iframe { max-width: 100%; display: block; }
   }
 }
 
-.download-panel{
-  background:#111;
-  border:1px solid var(--border);
-  border-radius:12px;
+/* MOBILE */
+
+.mobile-download-btn{
+  width:100%;
   padding:16px;
-}
-
-.download-box{
-  display:block;
-  width:100%;
-  padding:14px;
-  margin-bottom:10px;
-  border-radius:10px;
-  text-align:center;
-  font-weight:600;
-  background:#1f1f1f;
-  border:1px solid #333;
-  transition:.2s;
-}
-
-.download-box:hover{
-  background:#2a2a2a;
-}
-
-.download-toggle{
-  width:100%;
-  margin-top:20px;
-  padding:14px;
   border:none;
-  border-radius:10px;
-  font-weight:700;
-  background:var(--primary);
+  border-radius:14px;
+  font-weight:800;
+  font-size:16px;
   color:#fff;
   cursor:pointer;
+
+  background:linear-gradient(
+    135deg,
+    #ff0080,
+    #ff2d55,
+    #b300ff
+  );
+
+  margin-top:20px;
 }
 
 .download-links{
-  margin-top:12px;
+  margin-top:15px;
 }
 
+.download-links .download-box{
+  display:block;
+  width:100%;
+  text-align:center;
+
+  padding:18px;
+  margin-bottom:12px;
+
+  color:#fff;
+  font-weight:700;
+
+  border-radius:14px;
+
+  background:linear-gradient(
+    135deg,
+    #ff0080,
+    #ff2d55,
+    #b300ff
+  );
+}
+
+/* DESKTOP */
+
+.desktop-download-panel{
+  width:100%;
+}
+
+.desktop-download-title{
+  text-align:center;
+  color:#fff;
+  font-size:22px;
+  font-weight:800;
+
+  margin-bottom:15px;
+}
+
+.desktop-download-box{
+  display:block;
+
+  width:100%;
+  text-align:center;
+
+  padding:20px;
+
+  margin-bottom:12px;
+
+  color:#fff;
+  font-weight:700;
+
+  border-radius:14px;
+
+  background:linear-gradient(
+    135deg,
+    #ff0080,
+    #ff2d55,
+    #b300ff
+  );
+
+  box-shadow:
+    0 10px 25px rgba(255,0,128,.25);
+}
+
+.desktop-download-box:hover{
+  transform:translateY(-2px);
+}
+
+/* Hide mobile button on desktop */
+
 @media (min-width:1024px){
+
   .mobile-download-wrap{
+    display:none;
+  }
+
+  .desktop-download-panel{
+    display:block;
+  }
+}
+
+/* Hide desktop panel on mobile */
+
+@media (max-width:1023px){
+
+  .desktop-download-panel{
     display:none;
   }
 }
