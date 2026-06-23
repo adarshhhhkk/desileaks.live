@@ -59,6 +59,14 @@ if (!video) {
       ]);
       const shuffled = [...(more || [])].sort(() => Math.random() - 0.5).slice(0, 12);
       const cat = escapeHtml(video.category || "");
+      const downloadLinks = [
+  video.download_1,
+  video.download_2,
+  video.download_3,
+  video.download_4,
+  video.download_5,
+  video.download_6
+].filter(Boolean);
       content.innerHTML = `
         <div class="grid gap-6 lg:grid-cols-3">
           <div class="lg:col-span-2">
@@ -74,16 +82,81 @@ if (!video) {
 </div>
               ${video.description ? `<p class="watch-desc">${escapeHtml(video.description)}</p>` : ""}
             </header>
+
+${
+  downloadLinks.length
+    ? `
+      <div class="mobile-download-wrap">
+
+        <button id="downloadToggle" class="download-toggle">
+          ⬇ Download
+        </button>
+
+        <div id="downloadLinks" class="download-links hidden">
+
+          ${downloadLinks.map((link,i)=>`
+            <a
+              href="${link}"
+              target="_blank"
+              class="download-box"
+            >
+              Download Source ${i+1}
+            </a>
+          `).join("")}
+
+        </div>
+
+      </div>
+    `
+    : ""
+}
           </div>
           <aside class="hidden lg:block">
-            <h2 class="mb-3 text-xl font-bold">Suggested Videos</h2>
-            <div class="space-y-4">${(sidebar || []).map(videoCardHTML).join("")}</div>
-          </aside>
+
+  ${
+    downloadLinks.length
+      ? `
+      <div class="download-panel">
+        <h2 class="mb-3 text-xl font-bold">Download</h2>
+
+        ${downloadLinks.map((link,i)=>`
+          <a
+            href="${link}"
+            target="_blank"
+            class="download-box"
+          >
+            Download Source ${i+1}
+          </a>
+        `).join("")}
+      </div>
+      `
+      : ""
+  }
+
+  <h2 class="mb-3 text-xl font-bold" style="margin-top:20px">
+    Suggested Videos
+  </h2>
+
+  <div class="space-y-4">
+    ${(sidebar || []).map(videoCardHTML).join("")}
+  </div>
+
+</aside>
         </div>
         <section class="mt-10">
           <h2 class="mb-4 text-xl font-bold sm:text-2xl">More Videos</h2>
           <div class="grid grid-cols-2 gap-2 sm:gap-3 md:grid-cols-3 md:gap-4 lg:grid-cols-4">${shuffled.map(videoCardHTML).join("")}</div>
         </section>`;
+      const toggle = document.getElementById("downloadToggle");
+
+if (toggle) {
+  toggle.addEventListener("click", () => {
+    document
+      .getElementById("downloadLinks")
+      ?.classList.toggle("hidden");
+  });
+}
+      
     })();
 
 
