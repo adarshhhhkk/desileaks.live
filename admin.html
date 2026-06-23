@@ -290,7 +290,22 @@
         await new Promise(r => tmpV.onloadedmetadata = r);
         const duration = `${Math.floor(tmpV.duration/60)}:${Math.floor(tmpV.duration%60).toString().padStart(2,"0")}`;
         await supabase.from("categories").upsert({ name: fd.category }, { onConflict: "name" });
-        const { error: dbErr } = await supabase.from("videos").insert({ title: fd.title, description: fd.description, category: fd.category, video_url: videoUrl, thumbnail_url: t169, thumbnail_34_url: t34, duration });
+        const { error: dbErr } = await supabase.from("videos").insert({
+  title: fd.title,
+  description: fd.description,
+  category: fd.category,
+  video_url: videoUrl,
+  thumbnail_url: t169,
+  thumbnail_34_url: t34,
+  duration,
+
+  download_1: fd.download_1,
+  download_2: fd.download_2,
+  download_3: fd.download_3,
+  download_4: fd.download_4,
+  download_5: fd.download_5,
+  download_6: fd.download_6
+});
         if (dbErr) throw dbErr;
         toast({ title: "Uploaded!" }); e.target.reset(); thumbBlobs["34"] = thumbBlobs["169"] = null;
         document.getElementById("status-34").textContent = ""; document.getElementById("status-169").textContent = "";
@@ -333,7 +348,22 @@
           if (dm) t169 = `https://drive.google.com/thumbnail?id=${dm[1]}&sz=w1280`;
         }
         await supabase.from("categories").upsert({ name: fd.category }, { onConflict: "name" });
-        const { error } = await supabase.from("videos").insert({ title: fd.title, description: fd.description, category: fd.category, video_url: extracted, thumbnail_url: t169, thumbnail_34_url: t34, duration: fd.duration });
+        const { error } = await supabase.from("videos").insert({
+  title: fd.title,
+  description: fd.description,
+  category: fd.category,
+  video_url: extracted,
+  thumbnail_url: t169,
+  thumbnail_34_url: t34,
+  duration: fd.duration,
+
+  download_1: fd.download_1,
+  download_2: fd.download_2,
+  download_3: fd.download_3,
+  download_4: fd.download_4,
+  download_5: fd.download_5,
+  download_6: fd.download_6
+});
         if (error) throw error;
         toast({ title: "Saved!" }); e.target.reset(); linkBlobs["34"] = linkBlobs["169"] = null;
         document.getElementById("link-status-34").textContent = ""; document.getElementById("link-status-169").textContent = "";
