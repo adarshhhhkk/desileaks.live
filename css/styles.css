@@ -445,3 +445,17 @@ img, video, iframe { max-width: 100%; display: block; }
 
 }
 
+.mobile-top-ad{
+  display:flex;
+  justify-content:center;
+  margin-bottom:15px;
+}
+
+@media (min-width:1024px){
+
+  .mobile-top-ad{
+    display:none;
+  }
+
+}
+
