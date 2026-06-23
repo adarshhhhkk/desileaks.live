@@ -366,9 +366,8 @@ img, video, iframe { max-width: 100%; display: block; }
 /* DESKTOP */
 
 .desktop-download-panel{
-  width:160px;
-  margin-left:auto;
-  margin-right:auto;
+  width:130px;
+  margin:0 auto;
 }
 
 .desktop-download-title{
@@ -383,11 +382,11 @@ img, video, iframe { max-width: 100%; display: block; }
 .desktop-download-box{
   display:block;
 
-  width:100%;
+  width:130px;
   text-align:center;
 
-  padding:14px 10px;
-  font-size:14px;
+  padding:12px 8px;
+  font-size:13px;
   margin-bottom:12px;
 
   color:#fff;
@@ -432,13 +431,3 @@ img, video, iframe { max-width: 100%; display: block; }
   }
 }
 
-@media (min-width:1024px){
-
-  .watch-layout{
-    display:grid;
-    grid-template-columns:minmax(0,1fr) 180px;
-    gap:80px;
-    align-items:start;
-  }
-
-}
