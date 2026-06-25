@@ -10,9 +10,18 @@ export function videoPlayerHTML(src, poster) {
         <a class="btn-primary" target="_blank" rel="noopener" href="${toWatchUrl(src)}">Watch in new tab</a>
       </div>`;
     }
-    return `<div class="relative aspect-video w-full overflow-hidden rounded-lg bg-black">
-      <iframe src="${toEmbedUrl(src)}" class="h-full w-full" allow="autoplay; encrypted-media; picture-in-picture; fullscreen" sandbox="allow-scripts allow-same-origin allow-presentation allow-popups allow-forms" allowfullscreen referrerpolicy="no-referrer-when-downgrade" style="border:0"></iframe>
-    </div>`;
+   return `<div class="relative aspect-video w-full overflow-hidden rounded-lg bg-black">
+  <iframe
+      src="${toEmbedUrl(src)}"
+      class="h-full w-full"
+      frameborder="0"
+      allowfullscreen
+      webkitallowfullscreen
+      mozallowfullscreen
+      allow="autoplay; fullscreen; picture-in-picture"
+      style="border:0">
+  </iframe>
+</div>`;
   }
   return `<div class="relative aspect-video w-full overflow-hidden rounded-lg bg-black">
     <video controls controlsList="nodownload" class="h-full w-full" ${poster ? `poster="${poster}"` : ""}>
