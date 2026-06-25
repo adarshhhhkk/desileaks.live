@@ -1,4 +1,11 @@
 const HOSTS = [
+  {
+    name: "KrakenFiles",
+    domains: ["krakenfiles.com"],
+    requiresTopLevel: false,
+    toEmbedUrl: (u) => u,
+    toWatchUrl: (u) => u
+  },
   { name: "Google Drive", domains: ["drive.google.com"], requiresTopLevel: false,
     toEmbedUrl: (u) => { const m = u.match(/drive\.google\.com\/file\/d\/([^/]+)/); return m ? `https://drive.google.com/file/d/${m[1]}/preview` : u; },
     toWatchUrl: (u) => { const m = u.match(/drive\.google\.com\/file\/d\/([^/]+)/); return m ? `https://drive.google.com/file/d/${m[1]}/view` : u.replace("/preview", "/view"); } },
