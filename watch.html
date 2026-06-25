@@ -142,19 +142,7 @@ ${downloadLinks.length ? `
           <div class="grid grid-cols-2 gap-2 sm:gap-3 md:grid-cols-3 md:gap-4 lg:grid-cols-4">${shuffled.map(videoCardHTML).join("")}</div>
         </section>`;
       
-      juicyBanner(
-    "desktopTopBanner",
-    1120459,
-    908,
-    270
-);
-
-juicyBanner(
-    "mobileTopBanner",
-    1120460,
-    300,
-    112
-);
+      
       const toggle = document.getElementById("downloadToggle");
 
 if (toggle) {
@@ -166,6 +154,25 @@ if (toggle) {
 }
       
     })();
+
+
+    loadJuicy(() => {
+
+    juicyBanner(
+        "desktopTopBanner",
+        1120459,
+        908,
+        270
+    );
+
+    juicyBanner(
+        "mobileTopBanner",
+        1120460,
+        300,
+        112
+    );
+
+});
 
 
   </script>
