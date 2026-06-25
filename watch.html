@@ -141,22 +141,8 @@ ${downloadLinks.length ? `
           <h2 class="mb-4 text-xl font-bold sm:text-2xl">More Videos</h2>
           <div class="grid grid-cols-2 gap-2 sm:gap-3 md:grid-cols-3 md:gap-4 lg:grid-cols-4">${shuffled.map(videoCardHTML).join("")}</div>
         </section>`;
-      
-      
-      const toggle = document.getElementById("downloadToggle");
 
-if (toggle) {
-  toggle.addEventListener("click", () => {
-    document
-      .getElementById("downloadLinks")
-      ?.classList.toggle("hidden");
-  });
-}
-      
-    })();
-
-
-    loadJuicy(() => {
+       loadJuicy(() => {
 
     juicyBanner(
         "desktopTopBanner",
@@ -174,6 +160,22 @@ if (toggle) {
 
 });
 
+      
+      
+      const toggle = document.getElementById("downloadToggle");
+
+if (toggle) {
+  toggle.addEventListener("click", () => {
+    document
+      .getElementById("downloadLinks")
+      ?.classList.toggle("hidden");
+  });
+}
+      
+    })();
+
+
+   
 
   </script>
 
