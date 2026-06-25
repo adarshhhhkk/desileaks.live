@@ -1,12 +1,21 @@
-export function loadJuicy() {
-    if (window.__juicyLoaded) return;
+export function loadJuicy(callback) {
 
-    window.__juicyLoaded = true;
+    if (window.__juicyLoaded) {
+        if (callback) callback();
+        return;
+    }
 
     const s = document.createElement("script");
+
     s.src = "https://poweredby.jads.co/js/jads.js";
     s.async = true;
     s.setAttribute("data-cfasync", "false");
+
+    s.onload = () => {
+        window.__juicyLoaded = true;
+
+        if (callback) callback();
+    };
 
     document.head.appendChild(s);
 }
@@ -21,19 +30,17 @@ export function juicyBanner(containerId, zone, width, height) {
 
     const ins = document.createElement("ins");
 
-    ins.id = "juicy_" + zone + "_" + Math.random().toString(36).slice(2);
+    ins.id = "juicy_" + zone + "_" + Date.now();
 
-    ins.dataset.width = width;
-    ins.dataset.height = height;
+    ins.setAttribute("data-width", width);
+    ins.setAttribute("data-height", height);
 
     box.appendChild(ins);
 
-    const script = document.createElement("script");
+    window.adsbyjuicy = window.adsbyjuicy || [];
 
-    script.type = "text/javascript";
+    window.adsbyjuicy.push({
+        adzone: zone
+    });
 
-    script.text =
-        `(adsbyjuicy = window.adsbyjuicy || []).push({adzone:${zone}});`;
-
-    box.appendChild(script);
 }
