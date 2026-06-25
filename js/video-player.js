@@ -10,15 +10,14 @@ export function videoPlayerHTML(src, poster) {
         <a class="btn-primary" target="_blank" rel="noopener" href="${toWatchUrl(src)}">Watch in new tab</a>
       </div>`;
     }
-   return `<div class="relative aspect-video w-full overflow-hidden rounded-lg bg-black">
+  return `<div class="relative aspect-video w-full overflow-hidden rounded-lg bg-black">
   <iframe
       src="${toEmbedUrl(src)}"
       class="h-full w-full"
-      frameborder="0"
+      allow="autoplay; encrypted-media; picture-in-picture; fullscreen"
+      sandbox="allow-scripts allow-same-origin allow-presentation allow-popups allow-forms"
       allowfullscreen
-      webkitallowfullscreen
-      mozallowfullscreen
-      allow="autoplay; fullscreen; picture-in-picture"
+      referrerpolicy="no-referrer-when-downgrade"
       style="border:0">
   </iframe>
 </div>`;
