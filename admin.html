@@ -119,6 +119,7 @@
     import { openCropper, fileToDataURL, extractVideoFrame } from "/js/cropper.js";
     import { escapeHtml } from "/js/video-card.js";
     import { extractUrlFromInput } from "/js/video-url-handler.js";
+    import { uploadToImgBB } from "/js/imgbb.js";
 
     applySEO({ title: "Admin" });
     mountNavbar();
@@ -283,8 +284,8 @@
         const { error: ve } = await supabase.storage.from("videos").upload(vName, videoFile);
         if (ve) throw ve;
         const videoUrl = supabase.storage.from("videos").getPublicUrl(vName).data.publicUrl;
-        const t34 = await uploadThumb(thumbBlobs["34"], "34");
-        const t169 = await uploadThumb(thumbBlobs["169"], "169");
+        const t34 = await uploadThumb(thumbBlobs["34"]);
+        const t169 = await uploadThumb(thumbBlobs["169"]);
         // duration
         const tmpV = document.createElement("video"); tmpV.src = URL.createObjectURL(videoFile);
         await new Promise(r => tmpV.onloadedmetadata = r);
@@ -313,18 +314,13 @@
       } catch (err) { toast({ title: "Error", description: err.message || String(err), variant: "destructive" }); }
       finally { btn.disabled = false; btn.textContent = "Upload Video"; }
     });
-    async function uploadThumb(blob, suffix) {
-      if (!blob) return null;
-      const upscaled = blob;
-      const name = `${Date.now()}-${suffix}.jpg`;
-      const { error } = await supabase.storage.from("thumbnails").upload(name, upscaled, {
-        contentType: "image/jpeg",
-        cacheControl: "31536000",
-      });
-      if (error) throw error;
-      return supabase.storage.from("thumbnails").getPublicUrl(name).data.publicUrl;
-    }
+    async function uploadThumb(blob) {
 
+    if (!blob) return null;
+
+    return await uploadToImgBB(blob);
+
+}
     // ----- Upload by link -----
     const linkBlobs = { "34": null, "169": null };
     document.querySelectorAll("[data-link-thumb]").forEach(inp => inp.addEventListener("change", async (e) => {
@@ -340,8 +336,8 @@
       if (!extracted) return toast({ title: "Invalid URL", variant: "destructive" });
       const btn = document.getElementById("link-btn"); btn.disabled = true; btn.textContent = "Saving…";
       try {
-        const t34 = await uploadThumb(linkBlobs["34"], "l34");
-        let t169 = await uploadThumb(linkBlobs["169"], "l169");
+        const t34 = await uploadThumb(linkBlobs["34"]);
+        let t169 = await uploadThumb(linkBlobs["169"]);
         // Auto-thumb fallback for Google Drive
         if (!t169) {
           const dm = extracted.match(/drive\.google\.com\/file\/d\/([^/]+)/);
