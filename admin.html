@@ -178,10 +178,17 @@
             <td>${escapeHtml(v.category)}</td>
             <td>${(v.views || 0).toLocaleString()}</td>
             <td><button class="btn-ghost" data-primary="${v.id}" data-current="${v.is_primary}">${v.is_primary ? "⭐" : "☆"}</button></td>
-            <td class="flex gap-1">
-              <button class="btn-outline" data-edit="${v.id}">Edit</button>
-              <button class="btn-outline" data-del="${v.id}" style="color:#ef4444">Delete</button>
-            </td>
+            <td class="flex gap-1 flex-wrap">
+  <button class="btn-outline" data-edit="${v.id}">Edit</button>
+
+  <button class="btn-outline" data-thumb="${v.id}">
+    Thumbnail
+  </button>
+
+  <button class="btn-outline" data-del="${v.id}" style="color:#ef4444">
+    Delete
+  </button>
+</td>
           </tr>`).join("")}</tbody></table></div>`;
       list.querySelectorAll("[data-primary]").forEach(b => b.addEventListener("click", async () => {
         const id = b.dataset.primary; const cur = b.dataset.current === "true";
@@ -194,6 +201,13 @@
         toast({ title: "Deleted" }); loadVideos();
       }));
       list.querySelectorAll("[data-edit]").forEach(b => b.addEventListener("click", () => editVideo(data.find(v => v.id === b.dataset.edit))));
+      list.querySelectorAll("[data-thumb]").forEach(btn => {
+  btn.addEventListener("click", () => {
+    updateThumbnail(
+      data.find(v => v.id === btn.dataset.thumb)
+    );
+  });
+});
     }
 
     function editVideo(v) {
@@ -217,6 +231,136 @@
         toast({ title: "Saved" }); m.remove(); loadVideos();
       });
     }
+
+    async function updateThumbnail(video){
+
+    const modal = document.createElement("div");
+
+    modal.className = "modal-backdrop";
+
+    modal.innerHTML = `
+    <div class="modal">
+
+        <h3 class="text-xl font-bold mb-4">
+            Update Thumbnails
+        </h3>
+
+        <p>3:4 Thumbnail</p>
+
+        <input
+            id="thumb34"
+            type="file"
+            accept="image/*"
+            class="input"
+        >
+
+        <br><br>
+
+        <p>16:9 Thumbnail</p>
+
+        <input
+            id="thumb169"
+            type="file"
+            accept="image/*"
+            class="input"
+        >
+
+        <br><br>
+
+        <div class="flex justify-end gap-2">
+
+            <button
+                id="cancelThumb"
+                class="btn-outline"
+            >
+                Cancel
+            </button>
+
+            <button
+                id="saveThumb"
+                class="btn-primary"
+            >
+                Upload
+            </button>
+
+        </div>
+
+    </div>
+    `;
+
+    document.body.appendChild(modal);
+
+    modal.querySelector("#cancelThumb").onclick = () => modal.remove();
+
+    modal.querySelector("#saveThumb").onclick = async () => {
+
+        try{
+
+            let thumb34 = video.thumbnail_34_url;
+
+            let thumb169 = video.thumbnail_url;
+
+            const f34 =
+                modal.querySelector("#thumb34").files[0];
+
+            if(f34){
+
+                const url = await fileToDataURL(f34);
+
+                const blob = await openCropper(url,3/4);
+
+                thumb34 = await uploadToImgBB(blob);
+
+            }
+
+            const f169 =
+                modal.querySelector("#thumb169").files[0];
+
+            if(f169){
+
+                const url = await fileToDataURL(f169);
+
+                const blob = await openCropper(url,16/9);
+
+                thumb169 = await uploadToImgBB(blob);
+
+            }
+
+            const { error } = await supabase
+                .from("videos")
+                .update({
+
+                    thumbnail_url:thumb169,
+
+                    thumbnail_34_url:thumb34
+
+                })
+                .eq("id",video.id);
+
+            if(error) throw error;
+
+            toast({
+                title:"Updated"
+            });
+
+            modal.remove();
+
+            loadVideos();
+
+        }
+        catch(err){
+
+            toast({
+                title:"Error",
+                description:err.message,
+                variant:"destructive"
+            });
+
+        }
+
+    };
+
+}
 
     // ----- Categories -----
     async function loadCats() {
