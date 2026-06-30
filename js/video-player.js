@@ -23,8 +23,14 @@ export function videoPlayerHTML(src, poster) {
 </div>`;
   }
   return `<div class="relative aspect-video w-full overflow-hidden rounded-lg bg-black">
-    <video controls controlsList="nodownload" class="h-full w-full" ${poster ? `poster="${poster}"` : ""}>
-      <source src="${src}" type="video/mp4" />Your browser does not support the video tag.
+    <video
+        id="fluid-player"
+        controls
+        controlsList="nodownload"
+        class="h-full w-full"
+        ${poster ? `poster="${poster}"` : ""}
+    >
+        <source src="${src}" type="video/mp4">
     </video>
   </div>`;
 }
