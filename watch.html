@@ -5,6 +5,8 @@
   <title>Watch | DESILEAKS</title>
   <link rel="icon" href="/assets/favicon.ico" />
   <link rel="stylesheet" href="/css/styles.css" />
+  <link rel="stylesheet" href="https://cdn.fluidplayer.com/v3/current/fluidplayer.min.css">
+<script src="https://cdn.fluidplayer.com/v3/current/fluidplayer.min.js"></script>
 </head>
 <body>
   <main class="page min-h-screen container mx-auto px-4 py-6">
@@ -136,6 +138,38 @@ ${downloadLinks.length ? `
           <h2 class="mb-4 text-xl font-bold sm:text-2xl">More Videos</h2>
           <div class="grid grid-cols-2 gap-2 sm:gap-3 md:grid-cols-3 md:gap-4 lg:grid-cols-4">${shuffled.map(videoCardHTML).join("")}</div>
         </section>`;
+
+      const player = document.getElementById("fluid-player");
+
+if (player) {
+
+    fluidPlayer("fluid-player", {
+
+        layoutControls: {
+            fillToContainer: true,
+            posterImage: video.thumbnail_url
+        },
+
+        vastOptions: {
+
+            adList: [
+
+                {
+
+                    roll: "preRoll",
+
+                    vastTag:
+                        "https://s.magsrv.com/v1/vast.php?idz=5963008&ex_av=name"
+
+                }
+
+            ]
+
+        }
+
+    });
+
+}
       
       const toggle = document.getElementById("downloadToggle");
 
