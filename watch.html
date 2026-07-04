@@ -60,7 +60,7 @@ if (!video) {
   console.log("VIDEO FROM ID:", video);
 }
       if (!video) { content.innerHTML = `<div class="text-center py-20"><h1 class="text-2xl font-bold">Video not found</h1></div>`; return; }
-      applySEO({ title: video.title, description: video.description || `Watch ${video.title}`, image: video.thumbnail_url, url: `/watch?slug=${encodeURIComponent(video.slug || video.id)}`, type: "video.other", videoUrl: video.video_url });
+      applySEO({ title: video.title, description: video.description || `Watch ${video.title}`, image: video.thumbnail_url, url: `/watch/${encodeURIComponent(video.slug || video.id)}`, type: "video.other", videoUrl: video.video_url });
       injectVideoJsonLd(video);
       supabase.rpc("increment_video_views", { _video_id: video.id });
       const [sidebar, more] = await Promise.all([
