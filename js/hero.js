@@ -10,7 +10,7 @@ export async function mountHero(el, videosPromise = getLatestVideos(10)) {
   if (!data.length) { el.innerHTML = ""; return; }
   const slides = [...data.slice(-1), ...data, data[0]];
   const card = (v, i) => `
-    <a href="/watch?slug=${encodeURIComponent(v.slug||v.id)}" class="hero-card" data-real-index="${i}">
+    <a href="/watch/${encodeURIComponent(v.slug || v.id)}" class="hero-card" data-real-index="${i}">
       <picture>
   <source media="(min-width: 640px)" srcset="${v.thumbnail_url || v.thumbnail_34_url || '/assets/placeholder.svg'}">
   <img
