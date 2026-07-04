@@ -41,20 +41,65 @@ export function injectVideoJsonLd(video) {
   const prev = document.getElementById("video-jsonld");
   if (prev) prev.remove();
   const data = {
-    "@context": "https://schema.org",
-    "@type": "VideoObject",
-    name: video.title,
-    description: video.description || video.title,
-    thumbnailUrl: [video.thumbnail_url, video.thumbnail_34_url].filter(Boolean),
-    uploadDate: video.created_at,
-    contentUrl: video.video_url,
-    embedUrl: `${SITE_URL}/watch/${encodeURIComponent(video.slug || video.id)}`,
-    interactionStatistic: {
-      "@type": "InteractionCounter",
-      interactionType: { "@type": "WatchAction" },
-      userInteractionCount: video.views || 0,
+  "@context": "https://schema.org",
+  "@type": "VideoObject",
+
+  name: video.title,
+
+  description: video.description || video.title,
+
+  thumbnailUrl: [
+    video.thumbnail_url,
+    video.thumbnail_34_url
+  ].filter(Boolean),
+
+  uploadDate: new Date(video.created_at).toISOString(),
+
+    duration: (() => {
+  if (!video.duration) return undefined;
+
+  const parts = video.duration.split(":").map(Number);
+
+  if (parts.length === 2) {
+    return `PT${parts[0]}M${parts[1]}S`;
+  }
+
+  if (parts.length === 3) {
+    return `PT${parts[0]}H${parts[1]}M${parts[2]}S`;
+  }
+
+  return undefined;
+})(),
+    
+  contentUrl: video.video_url,
+
+  embedUrl: `${SITE_URL}/watch/${encodeURIComponent(video.slug || video.id)}`,
+
+  url: `${SITE_URL}/watch/${encodeURIComponent(video.slug || video.id)}`,
+
+  publisher: {
+    "@type": "Organization",
+    name: "DESILEAKS",
+    logo: {
+      "@type": "ImageObject",
+      url: `${SITE_URL}/assets/logo.png`
+    }
+  },
+
+  isFamilyFriendly: false,
+
+  inLanguage: "en",
+
+  genre: video.category || "General",
+
+  interactionStatistic: {
+    "@type": "InteractionCounter",
+    interactionType: {
+      "@type": "WatchAction"
     },
-  };
+    userInteractionCount: video.views || 0
+  }
+};
   const s = document.createElement("script");
   s.type = "application/ld+json"; s.id = "video-jsonld";
   s.textContent = JSON.stringify(data);
