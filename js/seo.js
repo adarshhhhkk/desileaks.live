@@ -48,7 +48,7 @@ export function injectVideoJsonLd(video) {
     thumbnailUrl: [video.thumbnail_url, video.thumbnail_34_url].filter(Boolean),
     uploadDate: video.created_at,
     contentUrl: video.video_url,
-    embedUrl: `${SITE_URL}/watch?slug=${encodeURIComponent(video.slug || video.id)}`,
+    embedUrl: `${SITE_URL}/watch/${encodeURIComponent(video.slug || video.id)}`,
     interactionStatistic: {
       "@type": "InteractionCounter",
       interactionType: { "@type": "WatchAction" },
