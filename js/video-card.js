@@ -31,7 +31,7 @@ if (typeof document !== "undefined") {
 }
 
 export function videoCardHTML(v) {
-  const href = `/watch?slug=${encodeURIComponent(v.slug || v.id)}`;
+  const href = `/watch/${encodeURIComponent(v.slug || v.id)}`;
   const thumb = v.thumbnail_url
     ? `<img src="${v.thumbnail_url}" alt="${escapeHtml(v.title)}" loading="lazy" class="h-full w-full object-cover" />`
     : `<div class="flex h-full w-full items-center justify-center" style="background:var(--muted)"><span style="font-size:2.5rem">▶</span></div>`;
