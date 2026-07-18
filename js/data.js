@@ -65,18 +65,48 @@ export function getLatestVideos(limit = 20) {
 }
 let categoriesPromise;
 
-export function getLatestVideos(limit = 20) {
-  if (!latestVideosPromise) {
-    latestVideosPromise = settle(
-      supabase
-        .from("videos")
-        .select("id,title,description,thumbnail_url,thumbnail_34_url,duration,views,created_at,slug,category")
-        .order("created_at", { ascending: false })
-        .limit(150),
-      []
-    );
+const CATEGORY_CACHE_KEY = "categories-cache";
+const CATEGORY_CACHE_TTL = 1000 * 60 * 60 * 24; // 24 hours
+
+export function getCategories(limit = 20) {
+
+  if (categoriesPromise)
+    return categoriesPromise;
+
+  const cached = localStorage.getItem(CATEGORY_CACHE_KEY);
+
+  if (cached) {
+    try {
+      const parsed = JSON.parse(cached);
+
+      if (Date.now() - parsed.time < CATEGORY_CACHE_TTL) {
+        categoriesPromise = Promise.resolve(parsed.data);
+        return categoriesPromise;
+      }
+    } catch {}
   }
-  return latestVideosPromise.then((rows) => rows.slice(0, limit));
+
+  categoriesPromise = settle(
+    supabase
+      .from("categories")
+      .select("id,name,image_url")
+      .order("display_order", { ascending: true })
+      .limit(limit),
+    []
+  ).then(rows => {
+
+    localStorage.setItem(
+      CATEGORY_CACHE_KEY,
+      JSON.stringify({
+        time: Date.now(),
+        data: rows
+      })
+    );
+
+    return rows;
+  });
+
+  return categoriesPromise;
 }
 
 export function getCategories(limit = 20) {
