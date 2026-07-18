@@ -72,13 +72,12 @@
     import {
   gridHTML,
   skeletonGridHTML,
-  seoLibraryHTML
 } from "/js/video-card.js";
     import { applySEO } from "/js/seo.js";
     import { getLatestVideos } from "/js/data.js";
     applySEO({});
     mountNavbar();
-    const latestVideos = getLatestVideos(150);
+    const latestVideos = getLatestVideos(20);
     mountHero(document.getElementById("hero"), latestVideos);
     mountCategorySlider(document.getElementById("categories"));
     const grid = document.getElementById("grid");
@@ -86,7 +85,7 @@
     async function load() {
   grid.innerHTML = skeletonGridHTML(8);
 
-  const allVideos = await getLatestVideos(150);
+  const allVideos = await getLatestVideos(20);
 
   let visibleVideos = [...allVideos].slice(0, 20);
 
@@ -99,7 +98,7 @@
 
   grid.innerHTML =
     visibleVideos.length
-      ? gridHTML(visibleVideos) + seoLibraryHTML(allVideos)
+      ? gridHTML(visibleVideos)
       : `<div class="empty-state"><p>No videos yet</p></div>`;
 }
     sort.addEventListener("change", load); load();
