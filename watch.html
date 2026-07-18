@@ -63,11 +63,18 @@ if (!video) {
       applySEO({ title: video.title, description: video.description || `Watch ${video.title}`, image: video.thumbnail_url, url: `/watch/${encodeURIComponent(video.slug || video.id)}`, type: "video.other", videoUrl: video.video_url });
       injectVideoJsonLd(video);
       supabase.rpc("increment_video_views", { _video_id: video.id });
-      const [sidebar, more] = await Promise.all([
-        settle(supabase.from("videos").select("id,title,thumbnail_url,duration,slug,created_at").neq("slug", slug).order("created_at", { ascending: false }).limit(10), []),
-        settle(supabase.from("videos").select("id,title,thumbnail_url,duration,slug,created_at").neq("slug", slug).limit(20), []),
-      ]);
-      const shuffled = [...(more || [])].sort(() => Math.random() - 0.5).slice(0, 12);
+      const more = await settle(
+  supabase
+    .from("videos")
+    .select("id,title,thumbnail_url,duration,slug,created_at")
+    .neq("slug", slug)
+    .limit(20),
+  []
+);
+
+const shuffled = [...more]
+  .sort(() => Math.random() - 0.5)
+  .slice(0, 12);
       const cat = escapeHtml(video.category || "");
       const downloadLinks = [
   video.download_1,
