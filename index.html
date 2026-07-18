@@ -69,7 +69,11 @@
     import { mountNavbar } from "/js/navbar.js";
     import { mountHero } from "/js/hero.js";
     import { mountCategorySlider } from "/js/category-slider.js";
-    import { gridHTML, skeletonGridHTML } from "/js/video-card.js";
+    import {
+  gridHTML,
+  skeletonGridHTML,
+  seoLibraryHTML
+} from "/js/video-card.js";
     import { applySEO } from "/js/seo.js";
     import { getLatestVideos } from "/js/data.js";
     applySEO({});
@@ -85,7 +89,9 @@
       const v = sort.value;
       if (v === "oldest") data.reverse();
       else if (v === "most_viewed") data.sort((a, b) => (b.views || 0) - (a.views || 0));
-      grid.innerHTML = data.length ? gridHTML(data) : `<div class="empty-state"><p>No videos yet</p></div>`;
+      grid.innerHTML = data.length
+  ? gridHTML(data) + seoLibraryHTML(data)
+  : `<div class="empty-state"><p>No videos yet</p></div>`;
     }
     sort.addEventListener("change", load); load();
   </script>
