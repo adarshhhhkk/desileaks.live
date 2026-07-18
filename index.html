@@ -78,21 +78,30 @@
     import { getLatestVideos } from "/js/data.js";
     applySEO({});
     mountNavbar();
-    const latestVideos = getLatestVideos(20);
+    const latestVideos = getLatestVideos(150);
     mountHero(document.getElementById("hero"), latestVideos);
     mountCategorySlider(document.getElementById("categories"));
     const grid = document.getElementById("grid");
     const sort = document.getElementById("sort");
     async function load() {
-      grid.innerHTML = skeletonGridHTML(8);
-      let data = [...await latestVideos];
-      const v = sort.value;
-      if (v === "oldest") data.reverse();
-      else if (v === "most_viewed") data.sort((a, b) => (b.views || 0) - (a.views || 0));
-      grid.innerHTML = data.length
-  ? gridHTML(data) + seoLibraryHTML(data)
-  : `<div class="empty-state"><p>No videos yet</p></div>`;
-    }
+  grid.innerHTML = skeletonGridHTML(8);
+
+  const allVideos = await getLatestVideos(150);
+
+  let visibleVideos = [...allVideos].slice(0, 20);
+
+  const v = sort.value;
+
+  if (v === "oldest")
+    visibleVideos.reverse();
+  else if (v === "most_viewed")
+    visibleVideos.sort((a, b) => (b.views || 0) - (a.views || 0));
+
+  grid.innerHTML =
+    visibleVideos.length
+      ? gridHTML(visibleVideos) + seoLibraryHTML(allVideos)
+      : `<div class="empty-state"><p>No videos yet</p></div>`;
+}
     sort.addEventListener("change", load); load();
   </script>
 </body>
