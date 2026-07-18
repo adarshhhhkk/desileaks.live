@@ -1,6 +1,6 @@
 export async function onRequest() {
   const res = await fetch(
-    "https://snuwaxtrhogfrhselwow.supabase.co/rest/v1/rpc/generate_sitemap?apikey=sb_publishable_YUR6o4bQT4FavQgc62oWNQ_O9G-qpD3",
+    "https://jaeshacdzvlalgdpflvr.supabase.co/rest/v1/rpc/generate_sitemap?apikey=sb_publishable_9xcKEzggpMVIqB13eknXrQ_1NCg3OBo",
     {
       method: "POST"
     }
