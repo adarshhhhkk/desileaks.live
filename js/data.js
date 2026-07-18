@@ -108,13 +108,3 @@ export function getCategories(limit = 20) {
 
   return categoriesPromise;
 }
-
-export function getCategories(limit = 20) {
-  if (!categoriesPromise) {
-    categoriesPromise = settle(
-      supabase.from("categories").select("id,name,image_url").order("display_order", { ascending: true }).limit(limit),
-      []
-    );
-  }
-  return categoriesPromise;
-}
