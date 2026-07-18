@@ -51,3 +51,40 @@ export function skeletonGridHTML(n = 8) {
 export function gridHTML(videos) {
   return `<div class="grid grid-cols-2 gap-2 sm:gap-3 md:grid-cols-3 md:gap-4 lg:grid-cols-4">${videos.map(videoCardHTML).join("")}</div>`;
 }
+
+export function seoLibraryHTML(videos) {
+
+  return `
+    <section class="seo-library mt-12">
+
+      <h2 class="text-2xl font-bold mb-6">
+        Latest Viral Videos
+      </h2>
+
+      ${videos.map(v => `
+        <article class="mb-6">
+
+          <h3 class="text-lg font-semibold">
+            <a href="/watch/${encodeURIComponent(v.slug || v.id)}">
+              ${escapeHtml(v.title)}
+            </a>
+          </h3>
+
+          <p>
+            ${escapeHtml(
+              v.description ||
+              `Watch ${v.title} online in HD on DESILEAKS.`
+            )}
+          </p>
+
+          <p>
+            Category:
+            ${escapeHtml(v.category || "General")}
+          </p>
+
+        </article>
+      `).join("")}
+
+    </section>
+  `;
+}
