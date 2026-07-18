@@ -10,7 +10,7 @@ export function getLatestVideos(limit = 20) {
         .from("videos")
         .select("id,title,description,thumbnail_url,thumbnail_34_url,duration,views,created_at,slug,category")
         .order("created_at", { ascending: false })
-        .limit(20),
+        .limit(150),
       []
     );
   }
